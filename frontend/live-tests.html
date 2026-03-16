@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManoShaanti Live API Tests</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #121a2b;
+      --line: #2a3a58;
+      --text: #e8eefc;
+      --muted: #9fb0d3;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --btn: #38bdf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Segoe UI, Tahoma, sans-serif;
+      background: radial-gradient(circle at top right, #1e293b 0%, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    h1 { margin: 0 0 6px; font-size: 1.5rem; }
+    h2 { margin: 0 0 10px; font-size: 1.1rem; }
+    p { margin: 0; color: var(--muted); }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      cursor: pointer;
+      background: var(--btn);
+      color: #062234;
+      font-weight: 700;
+    }
+
+    input[type="text"] {
+      width: min(520px, 100%);
+      border-radius: 9px;
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      background: #0f1627;
+      color: var(--text);
+    }
+
+    input[type="number"] {
+      width: 140px;
+      border-radius: 9px;
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      background: #0f1627;
+      color: var(--text);
+    }
+
+    pre {
+      margin: 10px 0 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: #090f1c;
+      border: 1px solid var(--line);
+      color: #c9d8f8;
+      overflow-x: auto;
+      max-height: 280px;
+    }
+
+    .video-wrap {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      width: min(560px, 100%);
+      aspect-ratio: 16 / 9;
+      background: #000;
+      position: relative;
+    }
+
+    #aslVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    select {
+      border-radius: 9px;
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      background: #0f1627;
+      color: var(--text);
+    }
+
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>ManoShaanti Live Browser Tests</h1>
+      <p>Run your backend and AI checks directly from browser without terminal commands.</p>
+    </div>
+
+    <div class="card">
+      <h2>Health Tests</h2>
+      <div class="row">
+        <button id="btnBackendHealth">Test Backend /health</button>
+        <button id="btnAiHealth">Test AI /health</button>
+        <button id="btnAslHealth">Test ASL Proxy /api/asl/health</button>
+      </div>
+      <pre id="outHealth">Ready</pre>
+    </div>
+
+    <div class="card">
+      <h2>Emotion + Chat Tests</h2>
+      <div class="row">
+        <button id="btnEmotionSad">Send Emotion = sad</button>
+        <button id="btnEmotionHappy">Send Emotion = happy</button>
+      </div>
+      <div class="row">
+        <input id="chatInput" type="text" value="I feel stressed. Give me one short supportive tip." />
+        <button id="btnChat">Test /api/chat</button>
+      </div>
+      <pre id="outChat">Ready</pre>
+    </div>
+
+    <div class="card">
+      <h2>ASL Recognition Test (Live Webcam)</h2>
+      <p>Real-time hand gesture detection from your camera feed, sent to POST /api/asl/recognize continuously.</p>
+      <div class="row">
+        <button id="btnAslStart">Start Live ASL</button>
+        <button id="btnAslStop" disabled>Stop Live ASL</button>
+        <select id="aslSignSelect"></select>
+        <button id="btnAslCapture">Capture Sample</button>
+        <button id="btnAslTemplates">Template Stats</button>
+        <button id="btnAslReset">Reset Templates</button>
+        <span id="aslStatus" class="muted">Idle</span>
+      </div>
+      <div class="video-wrap">
+        <video id="aslVideo" autoplay muted playsinline></video>
+      </div>
+      <pre id="outAsl">Ready</pre>
+    </div>
+
+    <div class="card">
+      <h2>Rewards + Gamification Tests</h2>
+      <div class="row">
+        <input id="rewardName" type="text" value="demo-user" />
+        <button id="btnRewardCreateUser">Create/Get User</button>
+      </div>
+      <div class="row">
+        <input id="rewardUserId" type="number" value="1" min="1" />
+        <input id="rewardPoints" type="number" value="20" min="1" />
+        <input id="rewardActivity" type="text" value="chat" />
+        <button id="btnRewardAward">Award Points</button>
+      </div>
+      <div class="row">
+        <button id="btnRewardUserSummary">Get User Rewards</button>
+        <button id="btnRewardLeaderboard">Get Leaderboard</button>
+        <button id="btnRewardQuickDemo">Quick Demo Run</button>
+      </div>
+      <pre id="outRewards">Ready</pre>
+    </div>
+  </div>
+
+  <script>
+    const outHealth = document.getElementById('outHealth');
+    const outChat = document.getElementById('outChat');
+    const outAsl = document.getElementById('outAsl');
+    const outRewards = document.getElementById('outRewards');
+    const aslVideo = document.getElementById('aslVideo');
+    const aslStatus = document.getElementById('aslStatus');
+    const btnAslStart = document.getElementById('btnAslStart');
+    const btnAslStop = document.getElementById('btnAslStop');
+    const btnAslCapture = document.getElementById('btnAslCapture');
+    const btnAslTemplates = document.getElementById('btnAslTemplates');
+    const btnAslReset = document.getElementById('btnAslReset');
+    const aslSignSelect = document.getElementById('aslSignSelect');
+
+    const aslCanvas = document.createElement('canvas');
+    const aslCtx = aslCanvas.getContext('2d');
+    let aslStream = null;
+    let aslTimer = null;
+    let lastGesture = 'NO_HAND';
+    const REQUIRED_SIGNS = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
+    REQUIRED_SIGNS.forEach(sign => {
+      const option = document.createElement('option');
+      option.value = sign;
+      option.textContent = 'Train Sign ' + sign;
+      aslSignSelect.appendChild(option);
+    });
+
+    function pretty(obj) {
+      return JSON.stringify(obj, null, 2);
+    }
+
+    async function api(method, url, body) {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = { raw: await res.text() };
+      }
+
+      return { ok: res.ok, status: res.status, data };
+    }
+
+    document.getElementById('btnBackendHealth').onclick = async () => {
+      outHealth.textContent = 'Testing backend...';
+      try {
+        const r = await api('GET', '/health');
+        outHealth.textContent = pretty(r);
+      } catch (e) {
+        outHealth.textContent = 'Backend health failed: ' + e.message;
+      }
+    };
+
+    document.getElementById('btnAiHealth').onclick = async () => {
+      outHealth.textContent = 'Testing AI service...';
+      try {
+        const r = await api('GET', 'http://localhost:8000/health');
+        outHealth.textContent = pretty(r);
+      } catch (e) {
+        outHealth.textContent = 'AI health failed: ' + e.message;
+      }
+    };
+
+    document.getElementById('btnAslHealth').onclick = async () => {
+      outHealth.textContent = 'Testing ASL proxy...';
+      try {
+        const r = await api('GET', '/api/asl/health');
+        outHealth.textContent = pretty(r);
+      } catch (e) {
+        outHealth.textContent = 'ASL health failed: ' + e.message;
+      }
+    };
+
+    document.getElementById('btnEmotionSad').onclick = async () => {
+      outChat.textContent = 'Sending emotion sad...';
+      const r = await api('POST', '/api/emotion', { emotion: 'sad' });
+      outChat.textContent = pretty(r);
+    };
+
+    document.getElementById('btnEmotionHappy').onclick = async () => {
+      outChat.textContent = 'Sending emotion happy...';
+      const r = await api('POST', '/api/emotion', { emotion: 'happy' });
+      outChat.textContent = pretty(r);
+    };
+
+    document.getElementById('btnChat').onclick = async () => {
+      outChat.textContent = 'Testing chat...';
+      const message = document.getElementById('chatInput').value.trim();
+      const r = await api('POST', '/api/chat', { message });
+      outChat.textContent = pretty(r);
+    };
+
+    function stopAslLoop() {
+      if (aslTimer) {
+        clearInterval(aslTimer);
+        aslTimer = null;
+      }
+
+      if (aslStream) {
+        aslStream.getTracks().forEach(track => track.stop());
+        aslStream = null;
+      }
+
+      aslVideo.srcObject = null;
+      btnAslStart.disabled = false;
+      btnAslStop.disabled = true;
+      aslStatus.textContent = 'Stopped';
+    }
+
+    async function captureAndRecognize() {
+      if (!aslVideo.videoWidth || !aslVideo.videoHeight) return;
+
+      aslCanvas.width = 320;
+      aslCanvas.height = 240;
+      aslCtx.drawImage(aslVideo, 0, 0, aslCanvas.width, aslCanvas.height);
+
+      const base64 = aslCanvas.toDataURL('image/jpeg', 0.75).split(',')[1];
+      const r = await api('POST', '/api/asl/recognize', { frameBase64: base64 });
+
+      if (r.ok && r.data) {
+        const changed = r.data.gesture !== lastGesture;
+        lastGesture = r.data.gesture;
+        aslStatus.textContent = changed
+          ? `Gesture changed: ${r.data.gesture}`
+          : `Live: ${r.data.gesture}`;
+      }
+
+      outAsl.textContent = pretty(r);
+    }
+
+    async function captureFrameBase64() {
+      if (!aslVideo.videoWidth || !aslVideo.videoHeight) {
+        throw new Error('Video not ready. Start Live ASL first.');
+      }
+
+      aslCanvas.width = 320;
+      aslCanvas.height = 240;
+      aslCtx.drawImage(aslVideo, 0, 0, aslCanvas.width, aslCanvas.height);
+      return aslCanvas.toDataURL('image/jpeg', 0.75).split(',')[1];
+    }
+
+    btnAslStart.onclick = async () => {
+      try {
+        btnAslStart.disabled = true;
+        btnAslStop.disabled = false;
+        aslStatus.textContent = 'Requesting camera...';
+
+        aslStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user' },
+          audio: false,
+        });
+        aslVideo.srcObject = aslStream;
+
+        await new Promise(resolve => {
+          aslVideo.onloadedmetadata = () => resolve();
+        });
+
+        aslStatus.textContent = 'Live ASL running';
+        outAsl.textContent = 'Streaming frames to /api/asl/recognize...';
+
+        await captureAndRecognize();
+        aslTimer = setInterval(async () => {
+          try {
+            await captureAndRecognize();
+          } catch (err) {
+            outAsl.textContent = 'ASL live error: ' + err.message;
+          }
+        }, 900);
+      } catch (err) {
+        btnAslStart.disabled = false;
+        btnAslStop.disabled = true;
+        aslStatus.textContent = 'Failed to start camera';
+        outAsl.textContent = 'Could not start ASL webcam: ' + err.message;
+      }
+    };
+
+    btnAslStop.onclick = stopAslLoop;
+
+    btnAslCapture.onclick = async () => {
+      try {
+        const frameBase64 = await captureFrameBase64();
+        const sign = aslSignSelect.value;
+        const r = await api('POST', '/api/asl/calibrate', { frameBase64, sign });
+        outAsl.textContent = pretty(r);
+        aslStatus.textContent = r.ok ? `Captured ${sign}` : `Capture failed for ${sign}`;
+      } catch (err) {
+        outAsl.textContent = 'Calibration error: ' + err.message;
+      }
+    };
+
+    btnAslTemplates.onclick = async () => {
+      try {
+        const r = await api('GET', '/api/asl/templates');
+        outAsl.textContent = pretty(r);
+      } catch (err) {
+        outAsl.textContent = 'Template stats error: ' + err.message;
+      }
+    };
+
+    btnAslReset.onclick = async () => {
+      try {
+        const r = await api('POST', '/api/asl/reset', {});
+        outAsl.textContent = pretty(r);
+      } catch (err) {
+        outAsl.textContent = 'Reset error: ' + err.message;
+      }
+    };
+
+    document.getElementById('btnRewardCreateUser').onclick = async () => {
+      try {
+        const name = document.getElementById('rewardName').value.trim();
+        if (!name) {
+          outRewards.textContent = 'Name is required.';
+          return;
+        }
+
+        const r = await api('POST', '/api/rewards/users', { name });
+        outRewards.textContent = pretty(r);
+        if (r.ok && r.data && r.data.user && r.data.user.id) {
+          document.getElementById('rewardUserId').value = r.data.user.id;
+        }
+      } catch (err) {
+        outRewards.textContent = 'Create user error: ' + err.message;
+      }
+    };
+
+    document.getElementById('btnRewardAward').onclick = async () => {
+      try {
+        const userId = Number(document.getElementById('rewardUserId').value);
+        const points = Number(document.getElementById('rewardPoints').value);
+        const activityType = document.getElementById('rewardActivity').value.trim() || 'general';
+
+        const r = await api('POST', '/api/rewards/award', {
+          userId,
+          points,
+          activityType,
+          note: 'awarded from live-tests dashboard',
+        });
+        outRewards.textContent = pretty(r);
+      } catch (err) {
+        outRewards.textContent = 'Award points error: ' + err.message;
+      }
+    };
+
+    document.getElementById('btnRewardUserSummary').onclick = async () => {
+      try {
+        const userId = Number(document.getElementById('rewardUserId').value);
+        const r = await api('GET', `/api/rewards/users/${userId}`);
+        outRewards.textContent = pretty(r);
+      } catch (err) {
+        outRewards.textContent = 'User rewards error: ' + err.message;
+      }
+    };
+
+    document.getElementById('btnRewardLeaderboard').onclick = async () => {
+      try {
+        const r = await api('GET', '/api/rewards/leaderboard?limit=10');
+        outRewards.textContent = pretty(r);
+      } catch (err) {
+        outRewards.textContent = 'Leaderboard error: ' + err.message;
+      }
+    };
+
+    document.getElementById('btnRewardQuickDemo').onclick = async () => {
+      const demoName = `demo-user-${Date.now()}`;
+      outRewards.textContent = 'Running quick demo...';
+
+      try {
+        const createRes = await api('POST', '/api/rewards/users', { name: demoName });
+        if (!createRes.ok || !createRes.data?.user?.id) {
+          outRewards.textContent = pretty({ step: 'createUser', result: createRes });
+          return;
+        }
+
+        const userId = Number(createRes.data.user.id);
+        document.getElementById('rewardName').value = demoName;
+        document.getElementById('rewardUserId').value = userId;
+
+        const awardRes = await api('POST', '/api/rewards/award', {
+          userId,
+          points: 40,
+          activityType: 'quick-demo',
+          note: 'quick demo step 1',
+        });
+
+        const summaryRes = await api('GET', `/api/rewards/users/${userId}`);
+        const leaderboardRes = await api('GET', '/api/rewards/leaderboard?limit=10');
+
+        outRewards.textContent = pretty({
+          demoUser: demoName,
+          steps: {
+            createUser: createRes,
+            awardPoints: awardRes,
+            userSummary: summaryRes,
+            leaderboard: leaderboardRes,
+          },
+        });
+      } catch (err) {
+        outRewards.textContent = 'Quick demo run error: ' + err.message;
+      }
+    };
+  </script>
+</body>
+</html>

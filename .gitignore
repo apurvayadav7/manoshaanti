@@ -1,0 +1,7 @@
+# Local environment files
+**/.env
+**/.env.*
+
+# Keep commit-safe templates
+!**/.env.example
+!**/.env.template

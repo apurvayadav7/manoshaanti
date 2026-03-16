@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+anthropic
+groq
+mediapipe
+opencv-python
+python-dotenv

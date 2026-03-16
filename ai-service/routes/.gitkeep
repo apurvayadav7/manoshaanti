@@ -1,0 +1,4 @@
+# This directory is intentionally empty.
+# FastAPI route files will be added here in later phases:
+# Phase 2: chat.py
+# Phase 4: asl.py

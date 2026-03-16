@@ -1,0 +1,4 @@
+# This directory is intentionally empty.
+# FastAPI service files will be added here in later phases:
+# Phase 2: chatService.py
+# Phase 4: aslService.py
