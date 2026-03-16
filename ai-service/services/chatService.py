@@ -1,12 +1,16 @@
 import os
-from typing import Optional
+from typing import Optional, List
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-def _build_system_prompt(emotion: Optional[str]) -> str:
+def _build_system_prompt(
+    emotion: Optional[str],
+    journal_context: Optional[List[str]] = None,
+    chat_history_context: Optional[List[str]] = None,
+) -> str:
     emotion_line = (
         f"Detected emotion from client-side face-api.js: {emotion}. "
         "Use this gently as context, but do not overstate certainty."
@@ -14,16 +18,39 @@ def _build_system_prompt(emotion: Optional[str]) -> str:
         else "No detected emotion was provided."
     )
 
+    journal_lines = ""
+    if journal_context:
+        joined = "\n".join([f"- {entry}" for entry in journal_context])
+        journal_lines = (
+            "Recent user journal context (if relevant, use gently):\n"
+            f"{joined}\n"
+        )
+
+    history_lines = ""
+    if chat_history_context:
+        joined_history = "\n\n".join(chat_history_context)
+        history_lines = (
+            "Recent conversation memory (last 5 days, up to 67 blocks):\n"
+            f"{joined_history}\n"
+        )
+
     return (
         "You are ManoShaanti, an empathetic AI mental wellness assistant for a hackathon demo. "
         "Respond in a warm, supportive, and concise way (2-5 sentences). "
         "Do not diagnose medical conditions. Encourage seeking help from trusted people "
         "or professionals when concerns are serious. "
-        f"{emotion_line}"
+        f"{emotion_line} "
+        f"{journal_lines}"
+        f"{history_lines}"
     )
 
 
-def _chat_with_anthropic(user_message: str, emotion: Optional[str]) -> str:
+def _chat_with_anthropic(
+    user_message: str,
+    emotion: Optional[str],
+    journal_context: Optional[List[str]] = None,
+    chat_history_context: Optional[List[str]] = None,
+) -> str:
     from anthropic import Anthropic
 
     api_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
@@ -39,7 +66,7 @@ def _chat_with_anthropic(user_message: str, emotion: Optional[str]) -> str:
     response = client.messages.create(
         model=model,
         max_tokens=300,
-        system=_build_system_prompt(emotion),
+        system=_build_system_prompt(emotion, journal_context, chat_history_context),
         messages=[
             {
                 "role": "user",
@@ -55,7 +82,12 @@ def _chat_with_anthropic(user_message: str, emotion: Optional[str]) -> str:
     return final_text or "I am here with you. Can you share a little more about how you feel right now?"
 
 
-def _chat_with_groq(user_message: str, emotion: Optional[str]) -> str:
+def _chat_with_groq(
+    user_message: str,
+    emotion: Optional[str],
+    journal_context: Optional[List[str]] = None,
+    chat_history_context: Optional[List[str]] = None,
+) -> str:
     from groq import Groq
 
     api_key = os.getenv("GROQ_API_KEY", "").strip()
@@ -73,7 +105,10 @@ def _chat_with_groq(user_message: str, emotion: Optional[str]) -> str:
         temperature=0.6,
         max_tokens=300,
         messages=[
-            {"role": "system", "content": _build_system_prompt(emotion)},
+            {
+                "role": "system",
+                "content": _build_system_prompt(emotion, journal_context, chat_history_context),
+            },
             {"role": "user", "content": user_message},
         ],
     )
@@ -81,13 +116,18 @@ def _chat_with_groq(user_message: str, emotion: Optional[str]) -> str:
     return content or "I am here with you. Can you share a little more about how you feel right now?"
 
 
-def get_chat_response(user_message: str, emotion: Optional[str] = None) -> str:
+def get_chat_response(
+    user_message: str,
+    emotion: Optional[str] = None,
+    journal_context: Optional[List[str]] = None,
+    chat_history_context: Optional[List[str]] = None,
+) -> str:
     provider = os.getenv("AI_PROVIDER", "anthropic").strip().lower()
 
     if provider == "groq":
-        return _chat_with_groq(user_message, emotion)
+        return _chat_with_groq(user_message, emotion, journal_context, chat_history_context)
     if provider == "anthropic":
-        return _chat_with_anthropic(user_message, emotion)
+        return _chat_with_anthropic(user_message, emotion, journal_context, chat_history_context)
 
     return (
         "Configuration error: AI_PROVIDER must be 'anthropic' or 'groq'. "

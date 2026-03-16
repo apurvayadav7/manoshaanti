@@ -142,6 +142,7 @@
         <button id="btnBackendHealth">Test Backend /health</button>
         <button id="btnAiHealth">Test AI /health</button>
         <button id="btnAslHealth">Test ASL Proxy /api/asl/health</button>
+        <button id="btnRewardsHealth">Test Rewards /api/rewards/health</button>
       </div>
       <pre id="outHealth">Ready</pre>
     </div>
@@ -151,10 +152,12 @@
       <div class="row">
         <button id="btnEmotionSad">Send Emotion = sad</button>
         <button id="btnEmotionHappy">Send Emotion = happy</button>
+        <button id="btnEmotionNeutral">Send Emotion = neutral</button>
       </div>
       <div class="row">
         <input id="chatInput" type="text" value="I feel stressed. Give me one short supportive tip." />
         <button id="btnChat">Test /api/chat</button>
+        <button id="btnCrisisChat">Test Crisis Detection</button>
       </div>
       <pre id="outChat">Ready</pre>
     </div>
@@ -196,6 +199,25 @@
       </div>
       <pre id="outRewards">Ready</pre>
     </div>
+
+    <div class="card">
+      <h2>All Features Endpoint Tests (Phase 6 to 14)</h2>
+      <p class="muted">Use this section to quickly test every feature endpoint from one place. Some buttons may return 404 until that phase is implemented.</p>
+      <div class="row">
+        <input id="allFeaturesUserId" type="number" value="1" min="1" />
+        <button id="btnTestPhase6">Phase 6 Crisis</button>
+        <button id="btnTestPhase7">Phase 7 Journal</button>
+        <button id="btnTestPhase8">Phase 8 Assessment</button>
+        <button id="btnTestPhase9">Phase 9 Recommendations</button>
+        <button id="btnTestPhase10">Phase 10 Breathing + Reward</button>
+        <button id="btnTestPhase11">Phase 11 Mood Weekly</button>
+        <button id="btnTestPhase12">Phase 12 Wordle + Reward</button>
+        <button id="btnTestPhase13">Phase 13 Activity Suggestion</button>
+        <button id="btnTestPhase14">Phase 14 Activity Reward Integration</button>
+        <button id="btnRunAllFeatures">Run All</button>
+      </div>
+      <pre id="outAllFeatures">Ready</pre>
+    </div>
   </div>
 
   <script>
@@ -211,6 +233,7 @@
     const btnAslTemplates = document.getElementById('btnAslTemplates');
     const btnAslReset = document.getElementById('btnAslReset');
     const aslSignSelect = document.getElementById('aslSignSelect');
+    const outAllFeatures = document.getElementById('outAllFeatures');
 
     const aslCanvas = document.createElement('canvas');
     const aslCtx = aslCanvas.getContext('2d');
@@ -277,6 +300,16 @@
       }
     };
 
+    document.getElementById('btnRewardsHealth').onclick = async () => {
+      outHealth.textContent = 'Testing rewards health...';
+      try {
+        const r = await api('GET', '/api/rewards/health');
+        outHealth.textContent = pretty(r);
+      } catch (e) {
+        outHealth.textContent = 'Rewards health failed: ' + e.message;
+      }
+    };
+
     document.getElementById('btnEmotionSad').onclick = async () => {
       outChat.textContent = 'Sending emotion sad...';
       const r = await api('POST', '/api/emotion', { emotion: 'sad' });
@@ -289,10 +322,22 @@
       outChat.textContent = pretty(r);
     };
 
+    document.getElementById('btnEmotionNeutral').onclick = async () => {
+      outChat.textContent = 'Sending emotion neutral...';
+      const r = await api('POST', '/api/emotion', { emotion: 'neutral' });
+      outChat.textContent = pretty(r);
+    };
+
     document.getElementById('btnChat').onclick = async () => {
       outChat.textContent = 'Testing chat...';
       const message = document.getElementById('chatInput').value.trim();
       const r = await api('POST', '/api/chat', { message });
+      outChat.textContent = pretty(r);
+    };
+
+    document.getElementById('btnCrisisChat').onclick = async () => {
+      outChat.textContent = 'Testing crisis detection...';
+      const r = await api('POST', '/api/chat', { message: 'I feel like ending my life' });
       outChat.textContent = pretty(r);
     };
 
@@ -504,6 +549,158 @@
       } catch (err) {
         outRewards.textContent = 'Quick demo run error: ' + err.message;
       }
+    };
+
+    function getAllFeaturesUserId() {
+      return Number(document.getElementById('allFeaturesUserId').value) || 1;
+    }
+
+    async function testPhase6() {
+      return api('POST', '/api/chat', { message: 'I want to hurt myself' });
+    }
+
+    async function testPhase7() {
+      const userId = getAllFeaturesUserId();
+      const settings = await api('POST', '/api/journal/settings', {
+        userId,
+        allows_chatbot_access: true,
+        journalPassword: 'demo1234'
+      });
+      const entry = await api('POST', '/api/journal/entry', {
+        userId,
+        entryText: 'Demo journal entry from live-tests dashboard.',
+        isPrivate: true,
+        journalPassword: 'demo1234'
+      });
+      const entries = await api('GET', `/api/journal/entries/${userId}?journalPassword=demo1234`);
+      return { settings, entry, entries };
+    }
+
+    async function testPhase8() {
+      const userId = getAllFeaturesUserId();
+      return api('POST', '/api/assessment/submit', {
+        userId,
+        answers: [1, 2, 1, 2, 1]
+      });
+    }
+
+    async function testPhase9() {
+      const userId = getAllFeaturesUserId();
+      return api('GET', `/api/assessment/recommendations/${userId}`);
+    }
+
+    async function testPhase10() {
+      const userId = getAllFeaturesUserId();
+      const pattern = await api('GET', '/api/breathing/pattern');
+      const reward = await api('POST', '/api/rewards/action', {
+        userId,
+        action: 'breathing_exercise'
+      });
+      return { pattern, reward };
+    }
+
+    async function testPhase11() {
+      const userId = getAllFeaturesUserId();
+      return api('GET', `/api/mood/weekly/${userId}`);
+    }
+
+    async function testPhase12() {
+      const userId = getAllFeaturesUserId();
+      const word = await api('GET', '/api/games/wordle/word');
+      const reward = await api('POST', '/api/rewards/action', {
+        userId,
+        action: 'word_game'
+      });
+      return { word, reward };
+    }
+
+    async function testPhase13() {
+      const userId = getAllFeaturesUserId();
+      await api('POST', '/api/emotion', { emotion: 'sad', userId });
+      return api('GET', `/api/activities/suggestions/${userId}`);
+    }
+
+    async function testPhase14() {
+      const userId = getAllFeaturesUserId();
+      const suggestionsRes = await api('GET', `/api/activities/suggestions/${userId}`);
+
+      const suggestedActivityId =
+        suggestionsRes?.data?.suggestions?.[0]?.id || 'hydration-break';
+
+      const rewardRes = await api('POST', '/api/rewards/activity-complete', {
+        userId,
+        activityId: suggestedActivityId
+      });
+
+      const summaryRes = await api('GET', `/api/rewards/users/${userId}`);
+
+      return {
+        suggestions: suggestionsRes,
+        activityReward: rewardRes,
+        rewardsSummary: summaryRes
+      };
+    }
+
+    document.getElementById('btnTestPhase6').onclick = async () => {
+      outAllFeatures.textContent = 'Testing Phase 6...';
+      outAllFeatures.textContent = pretty(await testPhase6());
+    };
+
+    document.getElementById('btnTestPhase7').onclick = async () => {
+      outAllFeatures.textContent = 'Testing Phase 7...';
+      outAllFeatures.textContent = pretty(await testPhase7());
+    };
+
+    document.getElementById('btnTestPhase8').onclick = async () => {
+      outAllFeatures.textContent = 'Testing Phase 8...';
+      outAllFeatures.textContent = pretty(await testPhase8());
+    };
+
+    document.getElementById('btnTestPhase9').onclick = async () => {
+      outAllFeatures.textContent = 'Testing Phase 9...';
+      outAllFeatures.textContent = pretty(await testPhase9());
+    };
+
+    document.getElementById('btnTestPhase10').onclick = async () => {
+      outAllFeatures.textContent = 'Testing Phase 10...';
+      outAllFeatures.textContent = pretty(await testPhase10());
+    };
+
+    document.getElementById('btnTestPhase11').onclick = async () => {
+      outAllFeatures.textContent = 'Testing Phase 11...';
+      outAllFeatures.textContent = pretty(await testPhase11());
+    };
+
+    document.getElementById('btnTestPhase12').onclick = async () => {
+      outAllFeatures.textContent = 'Testing Phase 12...';
+      outAllFeatures.textContent = pretty(await testPhase12());
+    };
+
+    document.getElementById('btnTestPhase13').onclick = async () => {
+      outAllFeatures.textContent = 'Testing Phase 13...';
+      outAllFeatures.textContent = pretty(await testPhase13());
+    };
+
+    document.getElementById('btnTestPhase14').onclick = async () => {
+      outAllFeatures.textContent = 'Testing Phase 14...';
+      outAllFeatures.textContent = pretty(await testPhase14());
+    };
+
+    document.getElementById('btnRunAllFeatures').onclick = async () => {
+      outAllFeatures.textContent = 'Running all phase tests...';
+      const results = {};
+
+      try { results.phase6 = await testPhase6(); } catch (e) { results.phase6 = { error: e.message }; }
+      try { results.phase7 = await testPhase7(); } catch (e) { results.phase7 = { error: e.message }; }
+      try { results.phase8 = await testPhase8(); } catch (e) { results.phase8 = { error: e.message }; }
+      try { results.phase9 = await testPhase9(); } catch (e) { results.phase9 = { error: e.message }; }
+      try { results.phase10 = await testPhase10(); } catch (e) { results.phase10 = { error: e.message }; }
+      try { results.phase11 = await testPhase11(); } catch (e) { results.phase11 = { error: e.message }; }
+      try { results.phase12 = await testPhase12(); } catch (e) { results.phase12 = { error: e.message }; }
+      try { results.phase13 = await testPhase13(); } catch (e) { results.phase13 = { error: e.message }; }
+      try { results.phase14 = await testPhase14(); } catch (e) { results.phase14 = { error: e.message }; }
+
+      outAllFeatures.textContent = pretty(results);
     };
   </script>
 </body>

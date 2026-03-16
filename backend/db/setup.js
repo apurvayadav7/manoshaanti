@@ -31,6 +31,29 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_reward_events_user_id
   ON reward_events(user_id);
+
+  CREATE TABLE IF NOT EXISTS assessments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    score INTEGER NOT NULL,
+    category TEXT NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_assessments_user_id_created_at
+  ON assessments(user_id, created_at DESC);
+
+  CREATE TABLE IF NOT EXISTS mood_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    emotion TEXT NOT NULL,
+    logged_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_mood_logs_user_id_logged_at
+  ON mood_logs(user_id, logged_at DESC);
 `);
 
 console.log(`Database initialized at ${dbPath}`);

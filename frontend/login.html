@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ManoShaanti Login</title>
+  <style>
+    :root {
+      --bg-1: #0f172a;
+      --bg-2: #1e293b;
+      --card: #111827;
+      --line: #374151;
+      --text: #f8fafc;
+      --muted: #9ca3af;
+      --accent: #22c55e;
+      --accent-2: #14b8a6;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, #164e63 0%, transparent 35%),
+        radial-gradient(circle at 85% 80%, #14532d 0%, transparent 30%),
+        linear-gradient(130deg, var(--bg-1), var(--bg-2));
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(720px, 100%);
+      background: color-mix(in srgb, var(--card) 92%, #000 8%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(4px);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.7rem;
+      letter-spacing: 0.3px;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .box {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #0b1220;
+    }
+
+    .box h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 8px;
+    }
+
+    input {
+      width: 100%;
+      margin-top: 6px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #020617;
+      color: var(--text);
+      padding: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #052e16;
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    }
+
+    .secondary {
+      background: #0b1220;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    pre {
+      margin-top: 14px;
+      width: 100%;
+      min-height: 180px;
+      max-height: 340px;
+      overflow: auto;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #030712;
+      color: #d1fae5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .status strong {
+      color: var(--text);
+    }
+
+    .error {
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>ManoShaanti Auth</h1>
+    <p>Standalone login page. Existing feature endpoints remain unchanged.</p>
+
+    <div class="grid">
+      <section class="box">
+        <h2>Register</h2>
+        <label>Name
+          <input id="registerName" type="text" placeholder="new username" />
+        </label>
+        <label>Password
+          <input id="registerPassword" type="password" placeholder="min 6 chars" />
+        </label>
+        <button id="btnRegister">Register</button>
+      </section>
+
+      <section class="box">
+        <h2>Login</h2>
+        <label>Name
+          <input id="loginName" type="text" placeholder="existing username" />
+        </label>
+        <label>Password
+          <input id="loginPassword" type="password" placeholder="your password" />
+        </label>
+        <button id="btnLogin">Login</button>
+      </section>
+
+      <section class="box">
+        <h2>Session</h2>
+        <button id="btnMe" class="secondary">Check /me</button>
+        <button id="btnLogout" class="secondary">Logout</button>
+        <div class="status" id="statusLine">Token: <strong>none</strong></div>
+      </section>
+    </div>
+
+    <pre id="output">Ready</pre>
+  </main>
+
+  <script>
+    const TOKEN_KEY = 'manoshaanti_auth_token';
+    const output = document.getElementById('output');
+    const statusLine = document.getElementById('statusLine');
+
+    function getToken() {
+      return localStorage.getItem(TOKEN_KEY) || '';
+    }
+
+    function setToken(token) {
+      if (token) {
+        localStorage.setItem(TOKEN_KEY, token);
+      } else {
+        localStorage.removeItem(TOKEN_KEY);
+      }
+      updateStatus();
+    }
+
+    function updateStatus() {
+      const token = getToken();
+      statusLine.innerHTML = token
+        ? 'Token: <strong>saved</strong>'
+        : 'Token: <strong>none</strong>';
+    }
+
+    async function api(method, url, body, withAuth = false) {
+      const headers = { 'Content-Type': 'application/json' };
+      if (withAuth) {
+        const token = getToken();
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+      }
+
+      const res = await fetch(url, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined,
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = { raw: await res.text() };
+      }
+
+      return { ok: res.ok, status: res.status, data };
+    }
+
+    function show(result) {
+      output.textContent = JSON.stringify(result, null, 2);
+    }
+
+    document.getElementById('btnRegister').onclick = async () => {
+      const name = document.getElementById('registerName').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const result = await api('POST', '/api/auth/register', { name, password });
+      if (result.ok && result.data?.token) {
+        setToken(result.data.token);
+      }
+      show(result);
+    };
+
+    document.getElementById('btnLogin').onclick = async () => {
+      const name = document.getElementById('loginName').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const result = await api('POST', '/api/auth/login', { name, password });
+      if (result.ok && result.data?.token) {
+        setToken(result.data.token);
+      }
+      show(result);
+    };
+
+    document.getElementById('btnMe').onclick = async () => {
+      const result = await api('GET', '/api/auth/me', null, true);
+      show(result);
+    };
+
+    document.getElementById('btnLogout').onclick = async () => {
+      const result = await api('POST', '/api/auth/logout', {}, true);
+      if (result.ok) {
+        setToken('');
+      }
+      show(result);
+    };
+
+    updateStatus();
+  </script>
+</body>
+</html>

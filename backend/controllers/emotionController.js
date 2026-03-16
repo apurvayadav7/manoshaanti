@@ -1,4 +1,5 @@
 const { setEmotion } = require('./chatController');
+const { db } = require('../db/database');
 
 const ALLOWED_EMOTIONS = [
   'neutral',
@@ -12,6 +13,7 @@ const ALLOWED_EMOTIONS = [
 
 function handleEmotion(req, res) {
   const rawEmotion = req.body?.emotion;
+  const rawUserId = req.body?.userId;
 
   if (!rawEmotion || typeof rawEmotion !== 'string') {
     return res.status(400).json({
@@ -37,11 +39,30 @@ function handleEmotion(req, res) {
     });
   }
 
+  let userId = null;
+  if (rawUserId !== undefined && rawUserId !== null && rawUserId !== '') {
+    const parsedUserId = Number(rawUserId);
+    if (!Number.isInteger(parsedUserId) || parsedUserId <= 0) {
+      return res.status(400).json({
+        error: 'userId must be a positive integer when provided.',
+      });
+    }
+
+    const user = db.prepare('SELECT id FROM users WHERE id = ?').get(parsedUserId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found for mood log.' });
+    }
+    userId = parsedUserId;
+  }
+
   setEmotion(emotion);
+
+  db.prepare('INSERT INTO mood_logs (user_id, emotion) VALUES (?, ?)').run(userId, emotion);
 
   return res.json({
     message: 'Emotion received successfully.',
     emotion,
+    userId,
     source: 'face-api.js-client',
   });
 }
