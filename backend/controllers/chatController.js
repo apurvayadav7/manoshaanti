@@ -4,8 +4,8 @@
 // then forwards both to the FastAPI service and sends the reply back.
 
 const axios = require('axios');
-const { getJournalContextForChat } = require('./journalController');
 const { db } = require('../db/database');
+const { buildContext, buildStructuredPrompt } = require('../services/contextBuilder');
 
 // In-memory store for the last detected emotion.
 // This is shared with emotionController.js (Phase 3).
@@ -48,28 +48,6 @@ function userExists(userId) {
   return Boolean(user);
 }
 
-function getRecentChatContext(userId, days = 5, blocks = 67) {
-  const rows = db
-    .prepare(
-      `
-        SELECT
-          user_message AS userMessage,
-          assistant_reply AS assistantReply,
-          created_at AS createdAt
-        FROM chat_history
-        WHERE user_id = ?
-          AND DATETIME(created_at) >= DATETIME('now', ?)
-        ORDER BY created_at DESC, id DESC
-        LIMIT ?
-      `
-    )
-    .all(userId, `-${days} days`, blocks);
-
-  return rows
-    .reverse()
-    .map((row) => `User: ${row.userMessage}\nAssistant: ${row.assistantReply}`);
-}
-
 function saveChatBlock(userId, userMessage, assistantReply) {
   db.prepare(
     `
@@ -109,16 +87,18 @@ async function handleChat(req, res) {
   }
 
   try {
-    // Forward the message + current emotion to the FastAPI AI service
+    // Build multi-source context before forwarding request to the AI service.
     const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
-    const journalContext = hasValidUser ? getJournalContextForChat(numericUserId) : [];
-    const chatHistoryContext = hasValidUser ? getRecentChatContext(numericUserId, 5, 67) : [];
+    const context = buildContext(hasValidUser ? numericUserId : null, {
+      detectedEmotion: currentEmotion,
+    });
+    const contextPrompt = buildStructuredPrompt(cleanedMessage, context);
 
     const response = await axios.post(`${aiServiceUrl}/chat/`, {
       message: cleanedMessage,
       emotion: currentEmotion,   // Will be null if no emotion detected yet
-      journal_context: journalContext,
-      chat_history_context: chatHistoryContext,
+      context_object: context,
+      context_prompt: contextPrompt,
     });
 
     if (hasValidUser && response.data?.reply) {

@@ -4,7 +4,7 @@
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from services.chatService import get_chat_response
 
 router = APIRouter()
@@ -19,6 +19,8 @@ class ChatRequest(BaseModel):
     emotion: Optional[str] = None  # The detected emotion from face-api.js (optional)
     journal_context: Optional[List[str]] = None
     chat_history_context: Optional[List[str]] = None
+    context_object: Optional[Dict[str, Any]] = None
+    context_prompt: Optional[str] = None
 
 
 class ChatResponse(BaseModel):
@@ -36,7 +38,9 @@ async def chat(request: ChatRequest):
             user_message=request.message,
             emotion=request.emotion,
             journal_context=request.journal_context or [],
-            chat_history_context=request.chat_history_context or []
+            chat_history_context=request.chat_history_context or [],
+            context_object=request.context_object or {},
+            context_prompt=request.context_prompt,
         )
         return ChatResponse(reply=reply)
     except Exception as e:
