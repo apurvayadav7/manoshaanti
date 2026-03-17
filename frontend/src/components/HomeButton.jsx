@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Camera, CameraOff, Home, LayoutDashboard, Mic, MicOff } from 'lucide-react';
 
-const PROMPT_SEEN_KEY = 'manoshaanti_media_prompt_seen';
 const CAMERA_ENABLED_KEY = 'manoshaanti_camera_enabled';
 const MIC_ENABLED_KEY = 'manoshaanti_mic_enabled';
 
@@ -17,9 +16,52 @@ export default function HomeButton() {
   const [mediaError, setMediaError] = useState('');
 
   useEffect(() => {
-    if (!localStorage.getItem(PROMPT_SEEN_KEY)) {
-      setShowPrompt(true);
+    let mounted = true;
+
+    async function checkStartupPermissions() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        if (mounted) {
+          setShowPrompt(true);
+        }
+        return;
+      }
+
+      try {
+        if (!navigator.permissions?.query) {
+          if (mounted) {
+            setShowPrompt(true);
+          }
+          return;
+        }
+
+        const [camStatus, micStatus] = await Promise.all([
+          navigator.permissions.query({ name: 'camera' }),
+          navigator.permissions.query({ name: 'microphone' }),
+        ]);
+
+        const fullyGranted = camStatus.state === 'granted' && micStatus.state === 'granted';
+        if (mounted) {
+          setShowPrompt(!fullyGranted);
+        }
+
+        if (!fullyGranted && camStatus.state !== 'denied' && micStatus.state !== 'denied') {
+          const granted = await requestMediaAccess();
+          if (mounted) {
+            setShowPrompt(!granted);
+          }
+        }
+      } catch {
+        if (mounted) {
+          setShowPrompt(true);
+        }
+      }
     }
+
+    checkStartupPermissions();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -69,13 +111,11 @@ export default function HomeButton() {
   async function handleAllowAccess() {
     const granted = await requestMediaAccess();
     if (granted) {
-      localStorage.setItem(PROMPT_SEEN_KEY, '1');
       setShowPrompt(false);
     }
   }
 
   function handleDismissPrompt() {
-    localStorage.setItem(PROMPT_SEEN_KEY, '1');
     setShowPrompt(false);
   }
 
