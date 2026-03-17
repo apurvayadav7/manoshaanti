@@ -3,9 +3,11 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 const links = [
+  { to: '/', label: 'Home' },
   { to: '/dashboard', label: 'Dashboard' },
-  { to: '/chatbot', label: 'Chatbot' },
-  { to: '/games', label: 'Minigames' },
+  { to: '/chatbot', label: 'Naina AI' },
+  { to: '/sleep', label: 'Calm Space' },
+  { to: '/games', label: 'Mini Games' },
 ];
 
 export default function GlobalNav() {
@@ -41,7 +43,7 @@ export default function GlobalNav() {
 
         <div className="theme-actions">
           <button type="button" className="theme-action" onClick={toggleTheme}>
-            {theme === 'dark' ? 'Dark' : 'Light'}
+            {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
           </button>
 
           {isAuthenticated ? (

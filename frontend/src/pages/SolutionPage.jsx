@@ -11,7 +11,8 @@ function mapIcon(text) {
 }
 
 function mapDestination(text) {
-  if (/breath|ground/i.test(text)) return { type: 'route', to: '/breathing' };
+  if (/ground/i.test(text)) return { type: 'route', to: '/grounding' };
+  if (/breath/i.test(text)) return { type: 'route', to: '/breathing' };
   if (/music|sound|sleep|asmr|relax/i.test(text)) return { type: 'route', to: '/sleep' };
   if (/mini-game|mini game|game/i.test(text)) return { type: 'route', to: '/games' };
   if (/journal/i.test(text)) return { type: 'route', to: '/journal' };

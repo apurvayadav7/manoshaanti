@@ -19,11 +19,11 @@ import { useSubscription } from '../context/SubscriptionContext';
 
 const dashboardCards = [
   {
-    title: 'Chatbot',
+    title: 'Naina Chat',
     icon: MessageCircleHeart,
     route: '/chatbot',
     access: 'free',
-    description: 'Talk with your AI companion and get support in the moment.',
+    description: 'Talk with Naina, your AI support companion, in the moment.',
   },
   {
     title: 'Assessment',
@@ -118,7 +118,7 @@ export default function DashboardPage() {
       return 'Quick grounding plus 10 minute focus sprint';
     }
     if (goal.includes('anxiety') || mood.includes('sad')) {
-      return 'Chatbot conversation and grounding exercise';
+      return 'Naina conversation and grounding exercise';
     }
 
     return '2 minute breathing exercise';

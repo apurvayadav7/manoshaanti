@@ -51,7 +51,7 @@ export default function MatchingGame({ onComplete }) {
 
   if (complete) {
     return (
-      <div className="soft-panel">
+      <div className="soft-panel game-panel matching-panel">
         <h3>Matching Card Game Complete</h3>
         <p>You completed the game in {moves} moves.</p>
         <div className="row-gap">
@@ -67,9 +67,12 @@ export default function MatchingGame({ onComplete }) {
   }
 
   return (
-    <div className="soft-panel">
-      <h3>Matching Card Game</h3>
-      <p>Find all wellness-themed pairs.</p>
+    <div className="soft-panel game-panel matching-panel">
+      <div className="game-panel-head">
+        <h3>Matching Card Game</h3>
+        <div className="game-meta-chip">Moves: {moves}</div>
+      </div>
+      <p>Find all wellness-themed pairs at your own pace.</p>
       <div className="matching-grid">
         {cards.map((card) => {
           const isOpen = opened.includes(card.id) || card.matched;

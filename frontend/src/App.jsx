@@ -6,6 +6,7 @@ import ChatbotPage from './pages/ChatbotPage';
 import DashboardPage from './pages/DashboardPage';
 import EntryPage from './pages/EntryPage';
 import GamesPage from './pages/GamesPage';
+import GroundingPage from './pages/GroundingPage';
 import HabitBuilderPage from './pages/HabitBuilderPage';
 import JournalPage from './pages/JournalPage';
 import LandingPage from './pages/LandingPage';
@@ -33,7 +34,10 @@ function App() {
         <Route path="games" element={<GamesPage />} />
         <Route path="games/matching" element={<GamesPage selectedGame="matching" />} />
         <Route path="games/wordle" element={<GamesPage selectedGame="wordle" />} />
+        <Route path="games/maze" element={<GamesPage selectedGame="maze" />} />
+        <Route path="games/bubble" element={<GamesPage selectedGame="bubble" />} />
         <Route path="breathing" element={<BreathingPage />} />
+        <Route path="grounding" element={<GroundingPage />} />
         <Route path="sleep" element={<SleepPage />} />
         <Route path="habit-builder" element={<HabitBuilderPage />} />
         <Route path="statistics" element={<StatisticsPage />} />

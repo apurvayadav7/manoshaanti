@@ -50,7 +50,7 @@ export default function ChatbotPage() {
   const [emotion, setEmotion] = useState('neutral');
   const [aslSign, setAslSign] = useState('OFF');
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Hello, I am here with you. How are you feeling today?' },
+    { role: 'assistant', content: 'Hi, I am Naina. I am here with you. How are you feeling today?' },
   ]);
   const [input, setInput] = useState('');
   const [cameraError, setCameraError] = useState('');
@@ -302,7 +302,7 @@ export default function ChatbotPage() {
 
     try {
       const data = await sendChatMessage({ message, userId: user?.id });
-      const reply = data.reply || 'I am listening.';
+      const reply = data.reply || 'I am Naina, and I am listening.';
       setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
       if (autoSpeak) {
         speakMessage(reply);
@@ -311,7 +311,7 @@ export default function ChatbotPage() {
       setChatError(getApiError(err, 'Chat service unavailable.'));
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'I am having trouble connecting right now. Please retry shortly.' },
+        { role: 'assistant', content: 'I am Naina, and I am having trouble connecting right now. Please retry shortly.' },
       ]);
     } finally {
       setSending(false);
@@ -335,7 +335,7 @@ export default function ChatbotPage() {
       </aside>
 
       <section className="soft-panel chat-main-panel">
-        <h2>AI Support Chat</h2>
+        <h2>Naina AI Chat</h2>
         <AutoSpeakToggle checked={autoSpeak} onChange={setAutoSpeak} />
         <div className="chat-thread">
           {messages.map((item, idx) => (

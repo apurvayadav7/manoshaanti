@@ -26,6 +26,10 @@ export default function WordleGame({ onComplete }) {
   }, []);
 
   const attemptsLeft = useMemo(() => MAX_TRIES - attempts.length, [attempts.length]);
+  const visibleRows = useMemo(() => {
+    const remaining = Math.max(0, MAX_TRIES - attempts.length);
+    return [...attempts, ...Array.from({ length: remaining }, () => ({ word: '', score: [] }))];
+  }, [attempts]);
 
   function evaluate(input) {
     return input.split('').map((letter, index) => {
@@ -55,23 +59,30 @@ export default function WordleGame({ onComplete }) {
   }
 
   return (
-    <div className="soft-panel">
-      <h3>Wordle-Style Game</h3>
+    <div className="soft-panel game-panel wordle-panel">
+      <div className="game-panel-head">
+        <h3>Wordle-Style Game</h3>
+        <div className="game-meta-chip">Attempts left: {attemptsLeft}</div>
+      </div>
       {loadingWord ? <p>Loading a calm word...</p> : null}
       <p>Guess the 5-letter wellness word.</p>
       <div className="wordle-grid">
-        {attempts.map((attempt, idx) => (
-          <div key={`${attempt.word}-${idx}`} className="word-row">
-            {attempt.word.split('').map((letter, letterIdx) => (
-              <span key={`${letter}-${letterIdx}`} className={`word-cell ${attempt.score[letterIdx]}`}>
-                {letter}
-              </span>
-            ))}
+        {visibleRows.map((attempt, idx) => (
+          <div key={`${attempt.word || 'row'}-${idx}`} className={`word-row ${attempt.word ? '' : 'empty'}`}>
+            {Array.from({ length: 5 }).map((_, letterIdx) => {
+              const letter = attempt.word?.[letterIdx] || '';
+              const scoreClass = attempt.score?.[letterIdx] || '';
+              return (
+                <span key={`${idx}-${letterIdx}`} className={`word-cell ${scoreClass}`}>
+                  {letter}
+                </span>
+              );
+            })}
           </div>
         ))}
       </div>
 
-      <form className="row-gap" onSubmit={submitGuess}>
+      <form className="row-gap wordle-form" onSubmit={submitGuess}>
         <input
           className="soft-input"
           value={guess}
@@ -93,7 +104,7 @@ export default function WordleGame({ onComplete }) {
         </div>
       ) : null}
       {status === 'lost' ? <p>Nice try. Word was {target}. Try again for reward points.</p> : null}
-      {status === 'playing' ? <p>Attempts left: {attemptsLeft}</p> : null}
+      {status === 'playing' ? <p className="soft-note">Take your time and focus on one guess at a time.</p> : null}
     </div>
   );
 }

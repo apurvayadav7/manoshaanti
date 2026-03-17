@@ -34,7 +34,7 @@ export function SpeakButton({ onClick, disabled }) {
 export function AutoSpeakToggle({ checked, onChange }) {
   return (
     <label className="voice-toggle">
-      <span>Auto read chatbot responses</span>
+      <span>Auto read Naina responses</span>
       <button
         type="button"
         role="switch"

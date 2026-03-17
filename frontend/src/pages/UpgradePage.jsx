@@ -2,7 +2,7 @@ import { Check, Sparkles } from 'lucide-react';
 import { useSubscription } from '../context/SubscriptionContext';
 
 const freeFeatures = [
-  'Basic AI chatbot',
+  'Basic Naina AI chat',
   'Basic assessment',
   'Limited journal entries',
   'Single habit plant',

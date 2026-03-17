@@ -23,24 +23,30 @@ export function classifyAssessment(score) {
   return 'Severe Depression Risk';
 }
 
-export function recommendationMap(category) {
-  const map = {
-    'Mild Anxiety/Stress': [
-      '4-4-4 breathing exercise',
-      'Calm music session',
-      'A short mini-game reset',
-    ],
-    'Moderate Mental Distress': [
-      'Guided journaling',
-      '5-4-3-2-1 grounding technique',
-      'Relaxation activity and routine reset',
-    ],
-    'Severe Depression Risk': [
-      'Breathing and grounding now',
-      'Talk with the ManoShaanti chatbot',
-      'Reach immediate support resources and trusted contacts',
-    ],
-  };
+export function recommendationMap(category, score = 0) {
+  if (category === 'Mild Anxiety/Stress') {
+    if (score <= 2) {
+      return ['4-4-4 breathing exercise', 'Calm music session', 'Guided journaling'];
+    }
 
-  return map[category] || [];
+    return ['A short mini-game reset', 'Guided journaling', 'Calm music session'];
+  }
+
+  if (category === 'Moderate Mental Distress') {
+    if (score <= 7) {
+      return ['5-4-3-2-1 grounding technique', 'Guided journaling', 'Calm music session'];
+    }
+
+    return ['5-4-3-2-1 grounding technique', '4-4-4 breathing exercise', 'Talk with Naina AI Chat'];
+  }
+
+  if (category === 'Severe Depression Risk') {
+    if (score <= 12) {
+      return ['Breathing and grounding now', 'Talk with Naina AI Chat', 'Reach immediate support resources and trusted contacts'];
+    }
+
+    return ['5-4-3-2-1 grounding technique', 'Talk with Naina AI Chat', 'Reach immediate support resources and trusted contacts'];
+  }
+
+  return [];
 }
