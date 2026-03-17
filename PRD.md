@@ -1,84 +1,84 @@
 # ManoShaanti Product Requirements Document (PRD)
 
-## 1. Product Overview
-ManoShaanti is an AI mental wellness platform designed for calm, supportive, and privacy-first emotional support.
+## 1. Product Summary
+ManoShaanti is an AI-powered mental wellness platform focused on calm, compassionate, and privacy-first emotional support.
 
-Core value:
-- empathetic chatbot support.
-- lightweight daily wellness activities.
-- optional long-term personalization via freemium upgrade.
-- accessible interactions, including voice and ASL support.
+Primary value:
+- empathetic chatbot assistance.
+- simple daily wellness activities.
+- optional deeper personalization through a freemium upgrade.
+- inclusive access features, including voice and ASL support.
 
-## 2. Product Goals
-- provide immediate emotional support with minimal friction.
-- preserve access to essential safety and wellness features for all users.
-- personalize AI responses through safe, summarized context.
-- maintain user trust through minimal data collection and clear controls.
+## 2. Product Objectives
+- deliver fast emotional support with as little friction as possible.
+- keep essential safety and wellness capabilities available to everyone.
+- improve AI replies using safe, summarized personal context.
+- build trust through minimal data collection and transparent controls.
 
-## 3. Non-Goals
-- clinical diagnosis or treatment.
-- emergency replacement services.
-- regulated medical workflows.
+## 3. Out of Scope
+- clinical diagnosis or medical treatment.
+- acting as an emergency response replacement.
+- regulated healthcare workflow handling.
 - collection of high-risk personal identifiers.
 
-## 4. Ethical Rule (Critical)
-The following must never be paywalled:
+## 4. Ethical Rule (Mandatory)
+The following features must never be locked behind payment:
 - AI chatbot access
-- crisis support behavior
+- crisis-support behavior
 - breathing exercises
 - basic mental health assessment
 - emotion detection
 - ASL accessibility
 
-Premium enhances personalization and tracking only.
+Paid plans may improve personalization and tracking only.
 
-## 5. User Segments
-- Anonymous user: quick support without signup.
-- Free authenticated user: basic tracking and core tools.
-- Premium user: advanced memory, trends, and personalization.
-- Student plan user: premium-equivalent access at discounted pricing.
+## 5. User Groups
+- Anonymous user: receives quick support without account creation.
+- Free signed-in user: gets core tools with basic tracking.
+- Premium user: receives richer memory, trend insights, and personalization.
+- Student plan user: gets premium-level access at reduced pricing.
 
 ## 6. Plans and Pricing
 - Free
 - Premium: 149 INR
 - Student Plan: 79 INR
 
-## 7. Feature Access Model
+## 7. Feature Access Framework
 
-### 7.1 Free Tier
+### 7.1 Free Plan
 - AI chatbot (basic)
 - emotion detection
 - ASL recognition
 - mental health assessment
 - breathing activity
-- sleep hygiene content (music, white noise, ASMR, relaxation videos)
+- sleep wellness content (music, white noise, ASMR, relaxation videos)
 - mini games (matching card game, wordle)
 - habit builder (single plant)
 - limited journal entries
 
-### 7.2 Premium and Student Tier
-- full chat memory and deeper context continuity
-- advanced mood reports and trends
+### 7.2 Premium and Student Plans
+- complete chat memory with stronger context continuity
+- advanced mood analytics and trends
 - assessment history tracking
 - unlimited journal entries
 - journal insights
 - expanded habit garden
-- extra relaxation content
+- additional relaxation content
 - extended mini game progression and bonuses
 - advanced reward badges/themes
 
 ## 8. Core Functional Requirements
 
 ### FR-1: Context-aware chatbot generation
-For every chat request, backend shall build a context object from:
-- latest assessment level
-- current detected emotion
+For each chat request, the backend must assemble a context object using:
+- most recent assessment level
+- currently detected emotion
 - recent chat summary
-- journal themes (if allowed)
+- journal themes (when permitted)
 - profile context
 
 ### FR-2: Context priority order
-Response behavior priority:
+Response logic must follow this order of priority:
 1. crisis detection
 2. assessment level
 3. detected emotion
@@ -86,74 +86,74 @@ Response behavior priority:
 5. journal themes
 6. profile context
 
-### FR-3: Crisis override safety
-Crisis phrase detection shall intercept risky messages and return crisis-safe guidance instead of standard AI generation.
+### FR-3: Crisis safety override
+When crisis phrases are detected, the system must intercept risky messages and return crisis-safe guidance instead of normal AI generation.
 
 ### FR-4: Journal privacy control
-Journal text shall remain private by default and only summarized themes may be used when user explicitly enables chatbot access.
+Journal content must remain private by default. Only summarized themes may be used, and only when the user explicitly enables chatbot access.
 
 ### FR-5: Voice interaction
-Frontend shall support optional browser-based:
-- speech-to-text for input
-- text-to-speech for assistant replies
-- optional auto-read assistant responses
+The frontend must support optional browser-based:
+- speech-to-text for user input
+- text-to-speech for assistant responses
+- optional auto-read for assistant responses
 
 ### FR-6: Freemium UX communication
-UI shall clearly indicate free vs premium features using subtle lock and badge indicators, with non-aggressive upgrade prompts.
+The UI must clearly differentiate free and premium capabilities using subtle lock/badge indicators, with gentle (non-aggressive) upgrade prompts.
 
-### FR-7: Settings plan visibility
-Settings page shall show current plan and provide upgrade/manage path.
+### FR-7: Plan visibility in settings
+The settings page must display the active plan and provide a path to upgrade/manage.
 
 ## 9. Data and Privacy Requirements
-- collect minimal account fields: username, email, password.
-- never send sensitive PII (phone, trusted contacts, raw journals) to AI model.
-- only summarized wellness context should be sent to AI provider.
-- enforce route-level auth and ownership checks for personal data.
+- collect only minimal account fields: username, email, password.
+- do not send sensitive PII (phone, trusted contacts, raw journal text) to the AI model.
+- send only summarized wellness context to the AI provider.
+- enforce route-level authentication and ownership checks for personal data.
 
 ## 10. UX and Accessibility Requirements
-- calm, minimal visual style.
+- calm, minimal interface style.
 - non-pushy premium messaging.
-- voice interaction optional and non-blocking.
-- graceful fallback for unsupported speech APIs.
+- optional, non-blocking voice interaction.
+- graceful fallback when speech APIs are unavailable.
 
-## 11. Key User Flows
+## 11. Primary User Flows
 
 ### Flow A: Anonymous support
-1. Open app.
-2. Use chatbot, breathing, sleep, and mini games without login.
-3. Access immediate support tools with no paywall on essentials.
+1. User opens the app.
+2. User accesses chatbot, breathing, sleep, and mini games without signing in.
+3. User gets immediate support tools with no paywall on essentials.
 
 ### Flow B: Personalized support
 1. User logs in.
 2. User records journals, assessments, emotions, and chat sessions.
-3. Context builder summarizes data per request.
-4. AI response uses personalized context.
+3. Context builder summarizes relevant data per request.
+4. AI reply uses personalized context.
 
 ### Flow C: Premium upgrade
-1. Free user taps premium-locked feature.
-2. Calm upgrade modal appears with plan benefits.
-3. User may upgrade or defer.
+1. Free user selects a premium-locked feature.
+2. A calm upgrade modal appears with plan benefits.
+3. User can upgrade now or defer.
 
 ## 12. Success Metrics
-- chatbot response reliability and latency.
-- crisis interception correctness.
+- chatbot reliability and response latency.
+- correctness of crisis interception.
 - retention in free essential features.
-- premium conversion without accessibility regression.
-- journal and mood engagement over time.
+- premium conversion without reducing accessibility.
+- ongoing engagement with journal and mood tracking.
 
 ## 13. Risks and Mitigations
-- Risk: over-personalized or incorrect emotional inference.
-  - Mitigation: summary-based context, non-diagnostic tone, fallback defaults.
-- Risk: privacy leakage in prompts.
-  - Mitigation: strict context sanitization and exclusion list.
-- Risk: aggressive monetization harming trust.
-  - Mitigation: ethical no-paywall list and gentle premium UI.
+- Risk: over-personalized or inaccurate emotional inference.
+  - Mitigation: summary-based context, non-diagnostic language, fallback defaults.
+- Risk: privacy leakage through prompts.
+  - Mitigation: strict context sanitization and exclusion lists.
+- Risk: trust erosion from aggressive monetization.
+  - Mitigation: ethical no-paywall policy and gentle premium UX.
 
 ## 14. Current Scope Status
 Implemented:
 - freemium UI layer (free/premium/student plan states)
-- premium indicators, upgrade modal, upgrade page
-- context builder module in backend
+- premium indicators, upgrade modal, and upgrade page
+- backend context builder module
 - structured context/prompt handoff to AI service
-- voice input/output integration in chatbot frontend
+- chatbot frontend voice input/output integration
 - crisis-safe chat interception and core wellness flows
