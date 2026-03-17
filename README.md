@@ -21,6 +21,8 @@ These remain free for all users:
 
 ## Plans and Pricing
 - Free
+- Premium: 149 INR
+- Student Plan: 79 INR
 
 ## Tech Stack
 - Frontend: React + Vite + Framer Motion + Lucide React
