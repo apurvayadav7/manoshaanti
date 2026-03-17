@@ -30,8 +30,15 @@ flowchart LR
 - Premium lock badge and upgrade modal for gated features.
 - Dedicated upgrade page with plan comparison and pricing.
 - Settings page shows current plan and upgrade/manage action.
+- Settings uses sectioned dropdown panels (single-open behavior).
+- Entry and settings pages support full-bleed ambient scenic background layers.
 
-### 3.3 Voice Interaction (Chat)
+### 3.3 Assessment and Recommendation Flow
+- Assessment score is classified into wellness categories.
+- Recommendation mapping now considers both category and score range.
+- Grounding recommendations route to a dedicated grounding flow page (`/grounding`).
+
+### 3.4 Voice Interaction (Chat)
 Voice feature module in frontend/src/features/voice:
 - stt.js: browser speech recognition wrapper.
 - tts.js: browser speech synthesis wrapper.
@@ -41,7 +48,13 @@ Chatbot voice capabilities:
 - Speech-to-text inserts transcript into input.
 - Text-to-speech reads assistant replies on demand.
 - Optional auto-read of assistant responses.
+- Voice selector prefers soothing female voices when available, with browser fallback.
 - Graceful fallback for unsupported browsers and mic errors.
+
+### 3.5 Habit Builder and Visual Garden
+- Daily habit checklist drives plant growth stage.
+- On full daily completion, a fully grown plant is added to a persistent healing garden collection.
+- Garden persistence uses frontend local storage keys for harvest history and plant entries.
 
 ## 4. Backend Architecture (Node.js)
 
@@ -159,3 +172,4 @@ Indexes support user and time-based access patterns for wellness features.
 - Add persistent plan state sync with backend.
 - Add de-identified analytics and observability.
 - Replace SQLite with Postgres for scale.
+- Add backend sync for habit garden progress across devices.

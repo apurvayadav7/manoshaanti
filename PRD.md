@@ -104,6 +104,21 @@ UI shall clearly indicate free vs premium features using subtle lock and badge i
 ### FR-7: Settings plan visibility
 Settings page shall show current plan and provide upgrade/manage path.
 
+### FR-8: Assessment recommendation diversity
+Assessment recommendations shall vary by both category and score band to avoid identical task sets for different answer combinations.
+
+### FR-9: Dedicated grounding flow
+When grounding is recommended, the recommendation shall open a dedicated grounding technique experience instead of a generic breathing page.
+
+### FR-10: Habit-based visual garden
+Completing daily habits shall grow and persist fully bloomed plants in a calming visual garden view.
+
+### FR-11: Entry and settings ambient background
+Entry and settings experiences shall support soft full-bleed ambient scenic backgrounds with blur/overlay treatment to preserve readability.
+
+### FR-12: Soothing assistant voice preference
+Text-to-speech shall prefer a soothing feminine voice when available, with calm default speaking rate and pitch.
+
 ## 9. Data and Privacy Requirements
 - collect minimal account fields: username, email, password.
 - never send sensitive PII (phone, trusted contacts, raw journals) to AI model.
@@ -157,3 +172,9 @@ Implemented:
 - structured context/prompt handoff to AI service
 - voice input/output integration in chatbot frontend
 - crisis-safe chat interception and core wellness flows
+- Naina AI naming across chat entry points
+- score-aware assessment recommendation mapping
+- dedicated 5-4-3-2-1 grounding page and routing
+- persistent habit-based visual healing garden
+- full-bleed scenic background support for entry and settings pages
+- soothing female-voice preference in TTS with graceful fallback

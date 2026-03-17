@@ -9,6 +9,11 @@ ManoShaanti is an AI-powered mental wellness platform with a privacy-first archi
 - Journal, assessment, mood, rewards, and habit tools
 - Voice interaction in chatbot using browser Web Speech APIs
 - Freemium plans with ethical no-paywall support essentials
+- Naina AI chat surface naming and supportive conversational UI
+- Score-aware recommendation mapping after assessment
+- Dedicated grounding technique page (`/grounding`)
+- Persistent visual healing garden grown through habit completion
+- Full-bleed scenic waterfall backgrounds on Entry and Settings pages
 
 ## Ethical No-Paywall Features
 These remain free for all users:
@@ -109,7 +114,18 @@ In chatbot page:
 - text-to-speech via window.speechSynthesis
 - manual speak button on assistant messages
 - optional auto-read assistant responses
+- preferred soothing female voice selection when available
 - graceful unsupported-browser handling
+
+## Assessment and Wellness Routing
+- Recommendations vary by category and score band.
+- Grounding-related recommendations route to the dedicated grounding flow page.
+- Breathing recommendations route to the breathing page.
+
+## Habit Garden Experience
+- Users complete daily habits to grow selected plants.
+- Full daily completion adds a fully bloomed plant to a persistent visual garden.
+- Garden entries are stored locally for continuity across sessions.
 
 ## Key API Endpoints
 
