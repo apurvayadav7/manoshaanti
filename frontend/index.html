@@ -1,13 +1,642 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManoShaanti - Your AI Companion for Mental Wellness</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <i class="fas fa-leaf"></i>
+                <span>ManoShaanti</span>
+            </div>
+            <ul class="navbar-menu" id="navbarMenu">
+                <li><a href="#" onclick="goToPage('landing')">Home</a></li>
+                <li><a href="#" onclick="goToPage('chat')">Chat</a></li>
+                <li><a href="#" onclick="goToPage('mood')">Mood Tracker</a></li>
+                <li><a href="#" onclick="goToPage('assessment')">Assessment</a></li>
+                <li><a href="#" onclick="goToPage('resources')">Resources</a></li>
+            </ul>
+            <div class="navbar-tools">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Pages Container -->
+    <div class="pages-container">
+        
+        <!-- 1. Landing Page -->
+        <div id="landing" class="page active">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Your AI Companion for <span class="gradient-text">Mental Wellness</span></h1>
+                    <p class="hero-subtitle">Expert-guided mental health support, available 24/7. Designed specifically for young adults like you.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-lg" onclick="goToPage('chat')">
+                            <i class="fas fa-wand-magic-sparkles"></i> Start Chat
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="scrollToFeatures()">
+                            <i class="fas fa-arrow-down"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-illustration">
+                    <div class="floating-card">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features" id="features">
+                <div class="section-header">
+                    <h2>What ManoShaanti Can Help With</h2>
+                    <p>Comprehensive mental health support tailored to your needs</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>AI Chat Support</h3>
+                        <p>Talk to our empathetic AI companion about what's on your mind. Get personalized guidance anytime.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Mood Tracking</h3>
+                        <p>Monitor your emotional patterns and understand your mental health trends over time.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Mental Health Assessments</h3>
+                        <p>Take confidential screenings for anxiety, depression, and stress to understand your wellbeing.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-doctor"></i>
+                        </div>
+                        <h3>Professional Referrals</h3>
+                        <p>When needed, connect with licensed mental health professionals in your area.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>Coping Strategies</h3>
+                        <p>Learn proven techniques for managing stress, anxiety, and difficult emotions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>Crisis Support</h3>
+                        <p>Access crisis resources and hotlines when you need immediate support.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section class="testimonials">
+                <div class="section-header">
+                    <h2>What Users Say</h2>
+                    <p>Real stories from real people</p>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"ManoShaanti has been a game-changer for me. Having 24/7 support without judgment has helped me navigate tough moments."</p>
+                        <p class="testimonial-author">— Sarah, 23</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"The mood tracker helped me identify my anxiety triggers. Finally understanding my patterns makes such a difference."</p>
+                        <p class="testimonial-author">— Marcus, 21</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">"This app genuinely cares about your well-being. The interface is so calm and welcoming, it really helped during my difficult times."</p>
+                        <p class="testimonial-author">— Alex, 20</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta-section">
+                <h2>Ready to Start Your Wellness Journey?</h2>
+                <p>Join thousands of young adults already finding support and clarity with ManoShaanti</p>
+                <button class="btn btn-primary btn-lg" onclick="goToPage('chat')">Get Started Today</button>
+            </section>
+        </div>
+
+        <!-- 2. Chat Interface Page -->
+        <div id="chat" class="page">
+            <div class="chat-container">
+                <!-- Sidebar -->
+                <aside class="chat-sidebar">
+                    <div class="sidebar-header">
+                        <h3>Dashboard</h3>
+                        <button class="btn-icon" onclick="toggleSidebar()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <nav class="sidebar-nav">
+                        <a href="#" class="nav-item active" onclick="setActiveChat('general')">
+                            <i class="fas fa-comments"></i>
+                            <span>New Chat</span>
+                        </a>
+                        <a href="#" class="nav-item" onclick="setActiveChat('stress')">
+                            <i class="fas fa-wind"></i>
+                            <span>Stress Relief</span>
+                        </a>
+                        <a href="#" class="nav-item" onclick="setActiveChat('anxiety')">
+                            <i class="fas fa-heart"></i>
+                            <span>Anxiety Support</span>
+                        </a>
+                        <a href="#" class="nav-item" onclick="setActiveChat('sleep')">
+                            <i class="fas fa-moon"></i>
+                            <span>Sleep & Rest</span>
+                        </a>
+                    </nav>
+                    <div class="sidebar-footer">
+                        <div class="chat-preset">
+                            <label>Quick Topics</label>
+                            <button class="preset-btn" onclick="sendMessage('I\'m feeling overwhelmed')">
+                                <i class="fas fa-star"></i> Overwhelmed
+                            </button>
+                            <button class="preset-btn" onclick="sendMessage('I need motivation')">
+                                <i class="fas fa-rocket"></i> Need Motivation
+                            </button>
+                            <button class="preset-btn" onclick="sendMessage('Help me sleep')">
+                                <i class="fas fa-bed"></i> Sleep Trouble
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Chat Area -->
+                <div class="chat-main">
+                    <!-- Chat Header -->
+                    <div class="chat-header">
+                        <div class="chat-title">
+                            <button class="btn-icon sidebar-toggle" onclick="toggleSidebar()">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div>
+                                <h2>Wellness Chat</h2>
+                                <p>Your AI companion is here to listen</p>
+                            </div>
+                        </div>
+                        <div class="chat-status">
+                            <div class="status-indicator online"></div>
+                            <span>Online & Ready</span>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message-group welcome-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div class="message">
+                                <p><strong>Hello! 👋</strong></p>
+                                <p>I'm your mental wellness companion. I'm here to listen without judgment and help you navigate what you're feeling.</p>
+                                <p>Feel free to share what's on your mind, or choose from these common topics:</p>
+                                <div class="quick-suggestions">
+                                    <button class="suggestion-btn" onclick="sendMessage('I\'m feeling stressed')">
+                                        <i class="fas fa-wind"></i> I'm feeling stressed
+                                    </button>
+                                    <button class="suggestion-btn" onclick="sendMessage('Help me calm down')">
+                                        <i class="fas fa-spa"></i> Help me calm down
+                                    </button>
+                                    <button class="suggestion-btn" onclick="sendMessage('I feel anxious')">
+                                        <i class="fas fa-triangle-exclamation"></i> I feel anxious
+                                    </button>
+                                    <button class="suggestion-btn" onclick="sendMessage('I need advice')">
+                                        <i class="fas fa-lightbulb"></i> I need advice
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="chat-input-area">
+                        <div class="input-container">
+                            <input 
+                                type="text" 
+                                id="messageInput" 
+                                class="message-input" 
+                                placeholder="Share your thoughts..."
+                                onkeypress="handleKeyPress(event)"
+                            >
+                            <button class="btn-send" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <p class="input-hint">💡 Your conversations are private and confidential</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Mood Tracker Page -->
+        <div id="mood" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <h1>Mood Tracker</h1>
+                    <p>Track your emotional wellbeing and discover patterns</p>
+                </div>
+
+                <div class="mood-tracker-grid">
+                    <!-- Today's Mood -->
+                    <section class="mood-section">
+                        <h2>How are you feeling today?</h2>
+                        <div class="mood-selector">
+                            <button class="mood-emoji" onclick="selectMood('great', this)">
+                                <span class="emoji">😄</span>
+                                <span class="mood-label">Great</span>
+                            </button>
+                            <button class="mood-emoji" onclick="selectMood('good', this)">
+                                <span class="emoji">🙂</span>
+                                <span class="mood-label">Good</span>
+                            </button>
+                            <button class="mood-emoji" onclick="selectMood('okay', this)">
+                                <span class="emoji">😐</span>
+                                <span class="mood-label">Okay</span>
+                            </button>
+                            <button class="mood-emoji" onclick="selectMood('down', this)">
+                                <span class="emoji">😔</span>
+                                <span class="mood-label">Down</span>
+                            </button>
+                            <button class="mood-emoji" onclick="selectMood('stressed', this)">
+                                <span class="emoji">😰</span>
+                                <span class="mood-label">Stressed</span>
+                            </button>
+                        </div>
+
+                        <!-- Stress Level -->
+                        <div class="stress-level">
+                            <label>Stress Level</label>
+                            <div class="slider-container">
+                                <span>None</span>
+                                <input type="range" min="0" max="10" value="5" class="stress-slider" id="stressSlider">
+                                <span>Extreme</span>
+                            </div>
+                            <p class="stress-value">Current: <strong id="stressValue">5</strong>/10</p>
+                        </div>
+
+                        <!-- Note -->
+                        <div class="mood-note">
+                            <label for="moodNote">What's contributing to your mood?</label>
+                            <textarea id="moodNote" placeholder="Add any notes (optional)..." rows="4"></textarea>
+                            <button class="btn btn-primary" onclick="saveMood()">Save Mood Entry</button>
+                        </div>
+                    </section>
+
+                    <!-- Charts & Analytics -->
+                    <section class="analytics-section">
+                        <!-- Weekly Chart -->
+                        <div class="chart-card">
+                            <h3>Weekly Mood Trend</h3>
+                            <div class="mini-chart">
+                                <div class="chart-bar" style="height: 60%;">
+                                    <span class="day">Mon</span>
+                                </div>
+                                <div class="chart-bar" style="height: 75%;">
+                                    <span class="day">Tue</span>
+                                </div>
+                                <div class="chart-bar" style="height: 50%;">
+                                    <span class="day">Wed</span>
+                                </div>
+                                <div class="chart-bar" style="height: 80%;">
+                                    <span class="day">Thu</span>
+                                </div>
+                                <div class="chart-bar" style="height: 65%;">
+                                    <span class="day">Fri</span>
+                                </div>
+                                <div class="chart-bar" style="height: 90%;">
+                                    <span class="day">Sat</span>
+                                </div>
+                                <div class="chart-bar" style="height: 85%;">
+                                    <span class="day">Sun</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Insights -->
+                        <div class="insights-card">
+                            <h3><i class="fas fa-lightbulb"></i> Weekly Insights</h3>
+                            <div class="insight-item">
+                                <p><strong>Average Mood:</strong> <span class="insight-value">Good 🙂</span></p>
+                            </div>
+                            <div class="insight-item">
+                                <p><strong>Best Day:</strong> <span class="insight-value">Saturday 😄</span></p>
+                            </div>
+                            <div class="insight-item">
+                                <p><strong>Stress Pattern:</strong> <span class="insight-value">Peaks on Wednesdays</span></p>
+                            </div>
+                            <div class="insight-item">
+                                <p><strong>Trend:</strong> <span class="insight-value positive"><i class="fas fa-arrow-trend-up"></i> Improving</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Streaks -->
+                        <div class="streaks-card">
+                            <h3><i class="fas fa-fire"></i> Your Streaks</h3>
+                            <div class="streak-item">
+                                <p>Check-in Streak</p>
+                                <p class="streak-count">12 days</p>
+                            </div>
+                            <div class="streak-item">
+                                <p>Positive Mood Streak</p>
+                                <p class="streak-count">5 days</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Mental Health Assessment Page -->
+        <div id="assessment" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <h1>Mental Health Assessments</h1>
+                    <p>Confidential screenings to understand your wellbeing</p>
+                </div>
+
+                <div class="assessment-selector">
+                    <button class="assessment-card" onclick="startAssessment('anxiety')">
+                        <div class="assessment-icon">
+                            <i class="fas fa-triangle-exclamation"></i>
+                        </div>
+                        <h3>Anxiety Screening</h3>
+                        <p>Understanding your anxiety levels and triggers</p>
+                        <span class="assessment-time">5 min</span>
+                    </button>
+                    <button class="assessment-card" onclick="startAssessment('depression')">
+                        <div class="assessment-icon">
+                            <i class="fas fa-cloud-rain"></i>
+                        </div>
+                        <h3>Depression Screening</h3>
+                        <p>Recognize signs and symptoms of depression</p>
+                        <span class="assessment-time">5 min</span>
+                    </button>
+                    <button class="assessment-card" onclick="startAssessment('stress')">
+                        <div class="assessment-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3>Stress Assessment</h3>
+                        <p>Evaluate your current stress levels</p>
+                        <span class="assessment-time">3 min</span>
+                    </button>
+                </div>
+
+                <!-- Assessment Modal (Hidden) -->
+                <div id="assessmentModal" class="modal">
+                    <div class="modal-content assessment-modal">
+                        <div class="modal-header">
+                            <h2 id="assessmentTitle">Assessment</h2>
+                            <button class="btn-close" onclick="closeAssessment()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <p class="progress-text"><span id="currentQuestion">1</span> of <span id="totalQuestions">5</span></p>
+                        </div>
+
+                        <div class="assessment-content">
+                            <div id="questionContainer"></div>
+                        </div>
+
+                        <div class="assessment-buttons">
+                            <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Resources Page -->
+        <div id="resources" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <h1>Mental Wellness Resources</h1>
+                    <p>Tools and support for your mental health journey</p>
+                </div>
+
+                <div class="resources-grid">
+                    <!-- Coping Strategies -->
+                    <section class="resource-section">
+                        <h2>Coping Strategies</h2>
+                        <div class="resource-cards">
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-wind"></i>
+                                </div>
+                                <h3>Deep Breathing</h3>
+                                <p>Learn the 4-7-8 breathing technique to calm your nervous system instantly.</p>
+                                <button class="btn btn-small">Learn More</button>
+                            </div>
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-person-walking"></i>
+                                </div>
+                                <h3>Grounding Techniques</h3>
+                                <p>5-senses technique to bring yourself back to the present moment.</p>
+                                <button class="btn btn-small">Learn More</button>
+                            </div>
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-bed"></i>
+                                </div>
+                                <h3>Sleep Hygiene</h3>
+                                <p>Tips for better sleep and managing sleep-related anxiety.</p>
+                                <button class="btn btn-small">Learn More</button>
+                            </div>
+                            <div class="resource-card">
+                                <div class="resource-icon">
+                                    <i class="fas fa-dumbbell"></i>
+                                </div>
+                                <h3>Exercise & Wellness</h3>
+                                <p>How physical activity boosts mental health and reduces stress.</p>
+                                <button class="btn btn-small">Learn More</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Crisis Support -->
+                    <section class="resource-section">
+                        <h2>Crisis Support</h2>
+                        <div class="crisis-cards">
+                            <div class="crisis-card">
+                                <div class="crisis-header">
+                                    <i class="fas fa-phone"></i>
+                                    <h3>National Suicide Prevention Lifeline</h3>
+                                </div>
+                                <p class="crisis-number">1-800-273-8255</p>
+                                <p class="crisis-desc">Available 24/7 for immediate support</p>
+                            </div>
+                            <div class="crisis-card">
+                                <div class="crisis-header">
+                                    <i class="fas fa-message"></i>
+                                    <h3>Crisis Text Line</h3>
+                                </div>
+                                <p class="crisis-number">Text HOME to 741741</p>
+                                <p class="crisis-desc">24/7 crisis counseling via text</p>
+                            </div>
+                            <div class="crisis-card">
+                                <div class="crisis-header">
+                                    <i class="fas fa-globe"></i>
+                                    <h3>International Association for Suicide Prevention</h3>
+                                </div>
+                                <p class="crisis-number">Global Support Network</p>
+                                <p class="crisis-desc">Find resources in your country</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Articles & Education -->
+                    <section class="resource-section">
+                        <h2>Educational Articles</h2>
+                        <div class="articles-list">
+                            <article class="article-item">
+                                <div class="article-meta">
+                                    <span class="article-category">Mental Health</span>
+                                    <span class="article-time">8 min read</span>
+                                </div>
+                                <h3>Understanding Anxiety: Types and Triggers</h3>
+                                <p>Learn about different types of anxiety disorders and how to identify your personal triggers.</p>
+                            </article>
+                            <article class="article-item">
+                                <div class="article-meta">
+                                    <span class="article-category">Wellness</span>
+                                    <span class="article-time">6 min read</span>
+                                </div>
+                                <h3>Building Resilience in Your Daily Life</h3>
+                                <p>Practical strategies to develop emotional resilience and bounce back from challenges.</p>
+                            </article>
+                            <article class="article-item">
+                                <div class="article-meta">
+                                    <span class="article-category">Relationships</span>
+                                    <span class="article-time">10 min read</span>
+                                </div>
+                                <h3>Communication Skills for Mental Health</h3>
+                                <p>How to express your feelings and set healthy boundaries in relationships.</p>
+                            </article>
+                        </div>
+                    </section>
+
+                    <!-- Professional Help -->
+                    <section class="resource-section">
+                        <h2>Find Professional Help</h2>
+                        <div class="professional-grid">
+                            <div class="professional-card">
+                                <div class="professional-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <h3>Therapists</h3>
+                                <p>Licensed therapists specializing in youth mental health</p>
+                                <button class="btn btn-secondary">Find Near You</button>
+                            </div>
+                            <div class="professional-card">
+                                <div class="professional-icon">
+                                    <i class="fas fa-medkit"></i>
+                                </div>
+                                <h3>Psychiatrists</h3>
+                                <p>Medical doctors who can prescribe medication if needed</p>
+                                <button class="btn btn-secondary">Find Near You</button>
+                            </div>
+                            <div class="professional-card">
+                                <div class="professional-icon">
+                                    <i class="fas fa-heart-pulse"></i>
+                                </div>
+                                <h3>Support Groups</h3>
+                                <p>Connect with peers and share experiences</p>
+                                <button class="btn btn-secondary">Join Groups</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ManoShaanti</h4>
+                <p>Supporting young adults on their mental wellness journey</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#" onclick="goToPage('landing')">Home</a></li>
+                    <li><a href="#" onclick="goToPage('chat')">Chat</a></li>
+                    <li><a href="#" onclick="goToPage('resources')">Resources</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Crisis Support</h4>
+                <p>1-800-273-8255</p>
+                <p>Available 24/7</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 ManoShaanti. All rights reserved. This app complements professional mental health care.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
 </html>
