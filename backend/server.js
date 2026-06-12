@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 dotenv.config();
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const chatRoutes = require('./routes/chatRoutes');
