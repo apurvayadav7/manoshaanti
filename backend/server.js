@@ -46,6 +46,7 @@ app.get('/emotion-test', (req, res) => {
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'login.html'));
 });
+
 app.listen(PORT, () => {
   console.log(`ManoShaanti backend running on http://localhost:${PORT}`);
 });
